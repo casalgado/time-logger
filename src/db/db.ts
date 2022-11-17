@@ -1,16 +1,40 @@
 import entries from "./journal.json";
 import { DateTime } from "luxon";
-console.log(entries)
+import * as Papa from "papaparse"
+
+
+
+const parseData = () => {
+    let data;
+    return new Promise((resolve) => {
+        Papa.parse("https://docs.google.com/spreadsheets/d/e/2PACX-1vSF23PU8rzXWTFHD5bKeg4jakcumzxNwAFxqGhuRVmzkfmVn_qgrUT4PZDkHo5cj3QRzKAr6HyRB4vx/pub?output=csv", {
+            download: true,
+            header: true,
+            complete: (results: any) => {
+                data = results.data.filter((e: any) => e.description != '')
+                console.log(data)
+                resolve(data);
+            }
+        })
+
+    });
+};
+
+
+
+
+
 
 export const categories = {
     trabajo: ['el diario', 'trabajo', 'vueltas casa', 'panaderia', 'tutoria'],
     entretenimiento: ['into the breach', 'league', 'netflix', 'youtube', 'reddit', 'podcast', 'computador'],
-    transporte: ['moto'],
-    casa: ['casa', 'almuerzo', 'baño'],
-    dormir: ['dormir'],
-    salud: ['yoga', 'terapia'],
+    transporte: ['moto', 'carro'],
+    casa: ['casa', 'almuerzo', 'baño', 'telefono'],
+    vueltas: ['mall plaza', 'notaria'],
+    dormir: ['dormir', 'snooze'],
+    salud: ['yoga', 'terapia', 'peluqueria'],
     misc: ['misc'],
-    salir: ['comer', 'telefono'],
+    salir: ['comer', 'la cueva'],
 }
 
 function categorize(description: string): string {
@@ -26,7 +50,8 @@ function categorize(description: string): string {
 }
 
 
-function formatData(entries: { date: string, time: string, description: string, silvi: string, headache: string | number, awareness: string | number, comment: string }[]): any {
+function formatData(entries: any): any {
+    // add validation to check that datetimes in entries are in ascending order
     let clean_entries: {}[] = []
     let start = DateTime.fromFormat(`${entries[0].date} ${entries[0].time}`, 'dd/MM/yy H:mm')
     for (let i = 0; i < entries.length - 1; i++) {
@@ -45,7 +70,7 @@ function formatData(entries: { date: string, time: string, description: string, 
             start: start,
             duration: duration.toObject().minutes,
             description: entries[i].description,
-            category: categorize(entries[i].description),
+            category: categorize(entries[i].description.trim()),
             silvi: silvi,
             awareness: awareness,
             headache: headache,
@@ -62,18 +87,18 @@ function categoryTotalsByDay(clean_entries: { day: string, category: string, dur
     let categoryTotalsByDay: any = {}
     for (let i = 0; i < clean_entries.length; i++) {
         const entry = clean_entries[i];
-        console.log(entry)
+
         if (categoryTotalsByDay[entry.day] == undefined) {
-            console.log('******')
+
             categoryTotalsByDay[entry.day] = {}
             for (let j = 0; j < category_keys.length; j++) {
 
                 const category = category_keys[j]
-                console.log(category)
+
                 categoryTotalsByDay[entry.day][category] = 0
             }
         }
-        console.log(categoryTotalsByDay[entry.day])
+
         categoryTotalsByDay[entry.day][entry.category] += entry.duration
 
     }
@@ -84,3 +109,7 @@ function categoryTotalsByDay(clean_entries: { day: string, category: string, dur
 export const all_entries = formatData(entries)
 
 export const totalsByDay = categoryTotalsByDay(all_entries)
+
+export const asyncTotals = parseData().then(res => (categoryTotalsByDay(formatData(res))))
+
+parseData().then(res => console.log(categoryTotalsByDay(formatData(res))))
