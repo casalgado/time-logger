@@ -2,14 +2,14 @@
 import { ref } from "vue";
 import { onBeforeMount } from "vue";
 import DayStats from "@/components/viz/DayStats.vue";
-import { asyncTotals } from "./../db/db.js";
+import { totalsByDay } from "../db/db.js";
 import { DateTime } from "luxon";
 
 console.log(DateTime.now().toString());
 
 const allTotals: any = ref({});
 onBeforeMount(() => {
-  asyncTotals.then((res) => (allTotals.value = res));
+  totalsByDay.then((res) => (allTotals.value = res));
 });
 </script>
 
