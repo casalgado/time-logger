@@ -4,6 +4,7 @@ import { onBeforeMount } from "vue";
 
 import { allEntries } from "../db/db.js";
 import { DateTime } from "luxon";
+import DayBar from "@/components/viz/DayBar.vue";
 
 const entriesByDay: any = ref([]);
 const raw: any = ref([]);
@@ -18,22 +19,10 @@ onBeforeMount(() => {
     let entries: any = [];
     //console.log(days);
     days.forEach((day: any) => {
-      entries.push(
-        res
-          .filter((e: any) => e.day == day)
-          .map((e: any) => {
-            return {
-              category: e.category,
-              description: e.description,
-              duration: e.duration,
-              absoluteStart: e.absoluteStart,
-            };
-          })
-      );
+      entries.push(res.filter((e: any) => e.day == day));
     });
-    //console.log(entries);
     raw.value = entries;
-    entriesByDay.value = entries;
+    entriesByDay.value = entries.reverse();
   });
 });
 </script>
@@ -41,17 +30,10 @@ onBeforeMount(() => {
 <template>
   <main>
     <div class="flex flex-col ml-6">
-      <div
-        v-for="(day, i) in entriesByDay.reverse()"
-        :key="i"
-        class="flex no-wrap mt-10"
-      >
-        <div
-          v-for="(entry, j) in day"
-          :key="j"
-          class="bg-slate-900 h-10 border-r w-5"
-          :style="{ width: `${entry.duration}px` }"
-        ></div>
+      <div v-for="(day, i) in entriesByDay" :key="i">
+        <div class="flex no-wrap mt-10">
+          <DayBar :day="day" />
+        </div>
       </div>
     </div>
   </main>
