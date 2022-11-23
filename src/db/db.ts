@@ -55,7 +55,7 @@ export const categories: Category[] = [
     {
         name: 'trabajo',
         color: 'bg-amber-500',
-        descriptions: ['el diario', 'trabajo', 'panaderia', 'tutoria', 'w3album', 'time-logger'],
+        descriptions: ['el diario', 'trabajo', 'panaderia', 'tutoria', 'w3album', 'time-logger', 'reunion'],
     },
     {
         name: 'entretenimiento',
@@ -75,7 +75,7 @@ export const categories: Category[] = [
     {
         name: 'vueltas',
         color: 'bg-yellow-900',
-        descriptions: ['mall plaza', 'notaria', 'vueltas beto', 'vueltas casa'],
+        descriptions: ['mall plaza', 'notaria', 'vueltas beto', 'vueltas casa', 'vueltas'],
     },
     {
         name: 'dormir',
@@ -85,7 +85,7 @@ export const categories: Category[] = [
     {
         name: 'salud',
         color: 'bg-green-600',
-        descriptions: ['yoga', 'terapia', 'peluqueria'],
+        descriptions: ['yoga', 'terapia', 'peluqueria', 'caminar', 'leer', 'escribir', 'estirar', 'meditar'],
     },
     {
         name: 'misc',
@@ -95,8 +95,9 @@ export const categories: Category[] = [
     {
         name: 'planes',
         color: 'bg-red-500',
-        descriptions: ['comer', 'la cueva', 'juegos', 'padre'],
-    },]
+        descriptions: ['comer', 'la cueva', 'juegos', 'padre', 'madre', 'el diario social', 'restaurante'],
+    }
+]
 
 function categorize(description: string): string {
     for (let i = 0; i < categories.length; i++) {

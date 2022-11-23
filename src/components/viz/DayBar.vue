@@ -13,7 +13,7 @@ function getColor(category: string): string | undefined {
   <div
     v-for="(e, j) in props.day"
     :key="j"
-    class="bg-slate-500 h-10 w-5"
+    class="h-10 w-5"
     :class="getColor(e.category)"
     :style="{ width: `${e.duration}px` }"
   ></div>
