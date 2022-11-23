@@ -1,27 +1,23 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { onBeforeMount } from "vue";
-import DayStats from "@/components/viz/DayStats.vue";
-import { totalsByDay } from "../db/db.js";
+import ShowCard from "@/components/viz/ShowCard.vue";
+import { allEntries } from "@/db/db";
+
 import { DateTime } from "luxon";
 
 console.log(DateTime.now().toString());
 
-const allTotals: any = ref({});
+const entries: any = ref({});
 onBeforeMount(() => {
-  totalsByDay.then((res) => (allTotals.value = res));
+  allEntries.then((res) => (entries.value = res.reverse()));
 });
 </script>
 
 <template>
   <main>
-    <div class="flex">
-      <DayStats
-        v-for="(d, i) in Object.keys(allTotals)"
-        :key="i"
-        :totals="allTotals[d]"
-        :day="d"
-      />
+    <div class="flex gap-3 px-10">
+      <ShowCard v-for="(entry, i) in entries" :card="entry" :key="i" />
     </div>
   </main>
 </template>
